@@ -31,6 +31,19 @@ async function run() {
             res.send(item)
         })
 
+        //PUT data
+        app.put('/items/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const updatedBody = req.body;
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: updatedBody
+            };
+            const items = await itemCollection.updateOne(filter, updateDoc, options)
+            res.send(items)
+        })
+
 
     }
     catch (error) {
