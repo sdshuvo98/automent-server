@@ -24,6 +24,10 @@ async function run() {
             const items = await cursor.toArray()
             res.send(items)
         })
+        app.get('/items/total', async (req, res) => {
+            const items = await itemCollection.estimatedDocumentCount()
+            res.send({ items })
+        })
         app.get('/items/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
