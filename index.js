@@ -21,13 +21,22 @@ async function run() {
         // GET Items
         app.get('/items', async (req, res) => {
             const pageNo = req.query.pageNo;
-            const cursor = itemCollection.find()
+            const email = req.query.email;
             let items;
-            if (pageNo) {
-                items = await cursor.skip(pageNo * 4).limit(4).toArray()
+            let cursor;
+            if (email) {
+                cursor = itemCollection.find({ email: email })
+                items = await cursor.toArray()
             }
             else {
-                items = await cursor.toArray()
+                cursor = itemCollection.find()
+
+                if (pageNo) {
+                    items = await cursor.skip(pageNo * 4).limit(4).toArray()
+                }
+                else {
+                    items = await cursor.toArray()
+                }
             }
             res.send(items)
         })
@@ -42,7 +51,14 @@ async function run() {
             res.send(item)
         })
 
-        //PUT data
+        // POST data
+        app.post('/items', async (req, res) => {
+            const newItem = req.body;
+            const items = await itemCollection.insertOne(newItem)
+            res.send(items)
+        })
+
+        // PUT data
         app.put('/items/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
@@ -53,6 +69,14 @@ async function run() {
             };
             const items = await itemCollection.updateOne(filter, updateDoc, options)
             res.send(items)
+        })
+
+        // DELETE data
+        app.delete('/items/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const item = await itemCollection.deleteOne(query)
+            res.send(item)
         })
 
 
