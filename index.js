@@ -20,13 +20,20 @@ async function run() {
 
         // GET Items
         app.get('/items', async (req, res) => {
+            const pageNo = req.query.pageNo;
             const cursor = itemCollection.find()
-            const items = await cursor.toArray()
+            let items;
+            if (pageNo) {
+                items = await cursor.skip(pageNo * 4).limit(4).toArray()
+            }
+            else {
+                items = await cursor.toArray()
+            }
             res.send(items)
         })
         app.get('/items/total', async (req, res) => {
-            const items = await itemCollection.estimatedDocumentCount()
-            res.send({ items })
+            const total = await itemCollection.estimatedDocumentCount()
+            res.send({ total })
         })
         app.get('/items/:id', async (req, res) => {
             const id = req.params.id;
