@@ -20,7 +20,8 @@ async function run() {
 
         // GET Items
         app.get('/items', async (req, res) => {
-            const pageNo = req.query.pageNo;
+            const pageNo = parseInt(req.query.pageNo);
+            const products = parseInt(req.query.items);
             const email = req.query.email;
             let items;
             let cursor;
@@ -31,8 +32,8 @@ async function run() {
             else {
                 cursor = itemCollection.find()
 
-                if (pageNo) {
-                    items = await cursor.skip(pageNo * 4).limit(4).toArray()
+                if (pageNo || products) {
+                    items = await cursor.skip(pageNo * products).limit(products).toArray()
                 }
                 else {
                     items = await cursor.toArray()
