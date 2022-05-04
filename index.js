@@ -15,7 +15,6 @@ app.use(express.json())
 const verifyJWT = (req, res, next) => {
     const email = req.query.email;
     const tokenHeader = req.headers.authentication;
-    // console.log(tokenHeader)
     if (email) {
         if (!tokenHeader) {
             return res.status(401).send({ message: 'unauthorized access.' });
@@ -86,7 +85,6 @@ async function run() {
         app.post('/login', async (req, res) => {
             const email = req.body;
             const token = jwt.sign(email, process.env.SECRET_TOKEN, { expiresIn: '1h' })
-            // console.log(token)
             res.send({ token })
         })
 
