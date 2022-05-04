@@ -80,9 +80,6 @@ async function run() {
             const item = await itemCollection.findOne(query)
             res.send(item)
         })
-        app.get('/test', async (req, res) => {
-            res.send('this is test')
-        })
 
         // Auth
         app.post('/login', async (req, res) => {
